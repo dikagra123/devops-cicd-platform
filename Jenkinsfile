@@ -5,6 +5,7 @@ pipeline {
     environment {
         IMAGE_NAME = "devops-app"
         VERSION = "${BUILD_NUMBER}"
+        POWERSHELL = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
     }
 
     stages {
@@ -35,10 +36,10 @@ pipeline {
         }
 
         stage('Security Scan') {
-    steps {
-       bat 'C:\\Tools\\trivy\\trivy.exe image --severity HIGH,CRITICAL %IMAGE_NAME%:%VERSION%'
-    }
-}
+            steps {
+                bat 'trivy image --severity HIGH,CRITICAL --exit-code 1 %IMAGE_NAME%:%VERSION%'
+            }
+        }
 
         stage('Terraform Validate') {
             steps {
@@ -71,7 +72,7 @@ pipeline {
         stage('Health Check Blue') {
             steps {
                 bat '''
-                    C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe ^
+                    %POWERSHELL% ^
                     -ExecutionPolicy Bypass ^
                     -File terraform\\scripts\\health-check.ps1 ^
                     -Url "http://localhost:3001"
@@ -82,22 +83,54 @@ pipeline {
         stage('Health Check Green') {
             steps {
                 bat '''
-                    C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe ^
+                    %POWERSHELL% ^
                     -ExecutionPolicy Bypass ^
                     -File terraform\\scripts\\health-check.ps1 ^
                     -Url "http://localhost:3002"
                 '''
             }
         }
+
+        stage('Switch Traffic to Green') {
+            steps {
+                bat '''
+                    %POWERSHELL% ^
+                    -ExecutionPolicy Bypass ^
+                    -File terraform\\scripts\\switch-green.ps1
+                '''
+            }
+        }
+
+        stage('Verify Production Traffic') {
+            steps {
+                bat '''
+                    %POWERSHELL% ^
+                    -Command "Invoke-WebRequest http://127.0.0.1:8080/health -UseBasicParsing"
+                '''
+            }
+        }
     }
 
     post {
+
         success {
-            echo 'Deployment completed successfully!'
+            echo '========================================'
+            echo ' DEPLOYMENT SUCCESSFUL'
+            echo ' Traffic is now on GREEN'
+            echo '========================================'
         }
 
         failure {
-            echo 'Pipeline failed.'
+            echo '========================================'
+            echo ' DEPLOYMENT FAILED'
+            echo ' Rolling back traffic to BLUE'
+            echo '========================================'
+
+            bat '''
+                %POWERSHELL% ^
+                -ExecutionPolicy Bypass ^
+                -File terraform\\scripts\\switch-blue.ps1
+            '''
         }
     }
 }
