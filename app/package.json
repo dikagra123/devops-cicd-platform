@@ -1,0 +1,13 @@
+{
+  "name": "devops-deployment-platform",
+  "version": "1.0.0",
+  "description": "Zero downtime DevSecOps deployment platform",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
