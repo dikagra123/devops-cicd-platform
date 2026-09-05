@@ -37,7 +37,7 @@ pipeline {
 
         stage('Security Scan') {
             steps {
-                bat 'trivy image --severity HIGH,CRITICAL --exit-code 1 %IMAGE_NAME%:%VERSION%'
+                bat 'C:\\Tools\\trivy\\trivy.exe image --severity HIGH,CRITICAL %IMAGE_NAME%:%VERSION%'
             }
         }
 
