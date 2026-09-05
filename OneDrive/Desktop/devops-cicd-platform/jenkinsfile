@@ -9,9 +9,10 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
+        stage('Check Workspace') {
             steps {
-                checkout scm
+                bat 'dir'
+                bat 'dir app'
             }
         }
 
@@ -30,6 +31,12 @@ pipeline {
         stage('Docker Build') {
             steps {
                 bat 'docker build -t %IMAGE_NAME%:%VERSION% .'
+            }
+        }
+
+        stage('Security Scan') {
+            steps {
+                bat 'trivy image --severity HIGH,CRITICAL --exit-code 1 %IMAGE_NAME%:%VERSION%'
             }
         }
 
@@ -52,5 +59,34 @@ pipeline {
             }
         }
 
+        stage('Deploy') {
+            steps {
+                bat '''
+                    cd terraform
+                    terraform apply -auto-approve -var="app_version=%VERSION%"
+                '''
+            }
+        }
+
+        stage('Health Check Blue') {
+            steps {
+                bat '''
+                    C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe ^
+                    -ExecutionPolicy Bypass ^
+                    -File scripts\\health-check.ps1 ^
+                    -Url "http://localhost:3001"
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment completed successfully!'
+        }
+
+        failure {
+            echo 'Pipeline failed.'
+        }
     }
 }
