@@ -35,10 +35,10 @@ pipeline {
         }
 
         stage('Security Scan') {
-            steps {
-                bat 'trivy image --severity HIGH,CRITICAL --exit-code 1 %IMAGE_NAME%:%VERSION%'
-            }
-        }
+    steps {
+        bat 'C:\\Tools\\trivy\\trivy.exe image --severity HIGH,CRITICAL --exit-code 1 %IMAGE_NAME%:%VERSION%'
+    }
+}
 
         stage('Terraform Validate') {
             steps {
