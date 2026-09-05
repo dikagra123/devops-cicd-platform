@@ -157,6 +157,17 @@ Once running, the app is available at:
 
 ---
 
+<img width="950" height="410" alt="Screenshot 2026-09-05 165355" src="https://github.com/user-attachments/assets/808a1fe5-b10a-4dfe-ac71-022551aba1b8" />
+
+<img width="959" height="434" alt="Screenshot 2026-09-05 165720" src="https://github.com/user-attachments/assets/2e7af431-7ddf-44e2-a8d4-8c61d425dc99" />
+
+<img width="952" height="394" alt="Screenshot 2026-09-05 165844" src="https://github.com/user-attachments/assets/da2b2017-4b83-45bc-92cc-8102bd143a72" />
+
+<img width="949" height="455" alt="Screenshot 2026-09-05 165907" src="https://github.com/user-attachments/assets/052ef1cc-d612-4b51-a6b7-1865d8163195" />
+
+<img width="959" height="475" alt="Screenshot 2026-09-05 170111" src="https://github.com/user-attachments/assets/41d0336a-ac3f-484d-8b0f-1be976d98b3e" />
+
+
 ## 🎓 What I Learned Building This
 
 Writing the pipeline steps was the easy part. The real learning came
