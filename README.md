@@ -27,6 +27,8 @@ Every time code is pushed, the pipeline automatically:
 No manual steps. No downtime. No broken deployments reaching users.
 
 ---
+<img width="1536" height="1024" alt="architecture" src="https://github.com/user-attachments/assets/f403e3be-a329-456b-9e55-1aafd7d47e98" />
+
 
 ## 🏗️ Architecture
 
